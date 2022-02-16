@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 public class GameManager : MonoBehaviour
 {
-    public List<GameObject> SkinList = new List<GameObject>();
+
 
     public Player player;
 
@@ -16,15 +17,30 @@ public class GameManager : MonoBehaviour
     public GenerateWorld WorldGenerator;
 
     public static GameManager instance;
-
-    [SerializeField]
+    [Space(50)]
+    [SerializeField, Header("Debugging")]
     GameObject DBGWindow;
+    public List<GameObject> SkinList = new List<GameObject>();
+    [SerializeField]
+    Transform SkinPickerGrid;
+    [SerializeField]
+    GameObject ButtonPrefab;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         instance = this;
         DontDestroyOnLoad(this);
+
+        int index = 0;
+        foreach(GameObject skin in SkinList)
+        {
+
+            GameObject button = Instantiate(ButtonPrefab, SkinPickerGrid);
+            int i = index;
+            button.GetComponent<Button>().onClick.AddListener(delegate { player.SetSkin(i); });
+            index++;
+        }
     }
 
     // Update is called once per frame

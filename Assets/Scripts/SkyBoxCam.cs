@@ -14,5 +14,6 @@ public class SkyBoxCam : MonoBehaviour
     {
         Vector3 FollowTrgt = new Vector3(FollowTarget.transform.position.x, 0, FollowTarget.transform.position.z);
         transform.position = Vector3.Lerp(transform.position, FollowTrgt / 100, camerascript.PosLerpSpeed * 4 * Time.deltaTime);
+        transform.GetChild(0).rotation = Quaternion.Lerp(transform.GetChild(0).rotation, FollowTarget.transform.GetChild(0).rotation, camerascript.PosLerpSpeed * 4 * Time.deltaTime);
     }
 }

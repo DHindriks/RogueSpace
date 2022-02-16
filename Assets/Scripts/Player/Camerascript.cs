@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Camerascript : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class Camerascript : MonoBehaviour
     Coroutine LastRoutine;
 
     Camera MainCamera;
+
+    [SerializeField]
+    Camera SkyboxCam;
+
     [SerializeField]
     GameObject playerobj;
     [HideInInspector]
@@ -28,6 +33,12 @@ public class Camerascript : MonoBehaviour
     [SerializeField]
     LayerMask OnInterior;
 
+    [SerializeField]
+    Animator FadeAnim;
+
+    public UnityEvent Switched;
+
+    Camera currentcam;
     // Use this for initialization
     void Start()
     {
@@ -44,15 +55,22 @@ public class Camerascript : MonoBehaviour
             ChangeZoom(90, 1);
             MainCamera.cullingMask = OnExterior;
             MainCamera.clearFlags = CameraClearFlags.Nothing;
-        }else
+
+            SkyboxCam.cullingMask = LayerMask.GetMask("Skybox");
+            SkyboxCam.clearFlags = CameraClearFlags.Skybox;
+        }
+        else
         {
             ChangeZoom(60, 1);
             MainCamera.cullingMask = OnInterior;
             MainCamera.clearFlags = CameraClearFlags.SolidColor;
+
+            SkyboxCam.cullingMask = OnInterior;
+            SkyboxCam.clearFlags = CameraClearFlags.SolidColor;
         }
     }
 
-    public void SetcamPos(GameObject Postarget = null, GameObject Lookttarget = null, float Axislerp = 0, float LookLerp = 0, float PosSpeed = 5f, float RotSpeed = 0f)
+    public void SetcamPos(GameObject Postarget = null, GameObject Lookttarget = null, float Axislerp = 0, float LookLerp = 1, float PosSpeed = 5f, float RotSpeed = 0.5f)
     {
         if (Postarget == null && playerobj != null)
         {
@@ -60,7 +78,7 @@ public class Camerascript : MonoBehaviour
         }
         if (Lookttarget == null && playerobj != null)
         {
-            Lookttarget = playerobj;
+            Lookttarget = playerobj.transform.GetChild(0).GetChild(4).gameObject;
         }
         FollowTarget = Postarget;
         LookTarget = Lookttarget;
@@ -86,6 +104,42 @@ public class Camerascript : MonoBehaviour
             StopCoroutine(LastRoutine);
         }
         LastRoutine = StartCoroutine(LerpZoom(Zoom, LerpTime));
+    }
+
+    public void ChangeCam(Camera Newcam = null)
+    {
+        StopCoroutine(CamFadeTransition());
+
+        StartCoroutine(CamFadeTransition(Newcam));
+    }
+
+    IEnumerator CamFadeTransition(Camera Newcam = null)
+    {
+
+        FadeAnim.SetBool("Faded", true);
+        yield return new WaitForSeconds(FadeAnim.GetCurrentAnimatorStateInfo(0).length);
+
+        //while (FadeAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        //{
+        //    yield return null;
+        //}
+
+        if (currentcam != null)
+        {
+            currentcam.enabled = false;
+            currentcam = null;
+        }
+        if (Newcam == null)
+        {
+            MainCamera.enabled = true;
+        }
+        else
+        {
+            Newcam.enabled = true;
+            currentcam = Newcam;
+        }
+        Switched.Invoke();
+        FadeAnim.SetBool("Faded", false);
     }
 
     IEnumerator LerpFOV(float FOV, float LerpTime)
@@ -127,7 +181,7 @@ public class Camerascript : MonoBehaviour
     void FixedUpdate()
     {
         this.transform.position = Vector3.Lerp(this.transform.position, new Vector3(Vector3.Lerp(FollowTarget.transform.position, this.transform.GetChild(0).transform.localPosition, AxisLerpamount).x, FollowTarget.transform.position.y, FollowTarget.transform.position.z), PosLerpSpeed * Time.deltaTime);
-        TargetRotation = Quaternion.LookRotation(LookTarget.transform.position - this.transform.GetChild(0).position);
-        this.transform.GetChild(0).rotation = Quaternion.Slerp(this.transform.GetChild(0).rotation, Quaternion.Lerp(TargetRotation, transform.rotation, LookLerpamount), LookLerpspeed * Time.deltaTime);
+        TargetRotation = Quaternion.LookRotation(LookTarget.transform.position - this.transform.GetChild(0).position, transform.GetChild(0).up);
+        this.transform.GetChild(0).rotation = Quaternion.Slerp(this.transform.GetChild(0).rotation, Quaternion.Lerp(transform.GetChild(0).rotation, TargetRotation, LookLerpamount), LookLerpspeed * Time.deltaTime);
     }
 }

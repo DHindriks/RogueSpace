@@ -56,7 +56,7 @@ public class DungeonGenerator : MonoBehaviour
 
         Data = GetComponentInParent<DungeonData>();
         Color ColorTop = DungeonColors[seed.Next(0, DungeonColors.Count)];
-        Color ColorBot = ColorTop * 0.1f;
+        Color ColorBot = ColorTop * 0.05f;
 
         Data.WallMat = Instantiate(WallMatBase);
         Data.WallMat.SetColor("BottomColor", ColorBot);
@@ -65,6 +65,8 @@ public class DungeonGenerator : MonoBehaviour
         Data.FloorMat = Instantiate(FloorMatBase);
         Data.FloorMat.SetColor("BottomColor", ColorTop);
         Data.FloorMat.SetColor("TopColor", ColorBot);
+
+        Data.Init();
 
         GameObject FirstTile = Instantiate(StartTiles[seed.Next(0, StartTiles.Count)], transform);
         FirstTile.name += "(Origin)";

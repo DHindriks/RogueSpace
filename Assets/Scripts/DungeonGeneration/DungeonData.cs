@@ -16,7 +16,7 @@ public class DungeonData : MonoBehaviour
     [HideInInspector]
     public Material FloorMat;
 
-    void Start()
+    public void Init()
     {
         foreach(MeshRenderer renderer in OuterColors)
         {

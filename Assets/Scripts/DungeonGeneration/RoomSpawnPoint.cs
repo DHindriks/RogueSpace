@@ -10,7 +10,7 @@ public class RoomSpawnPoint : MonoBehaviour
     [Space(40)]
     public List<GameObject> Interiors; //possible interiors the rooms can contain
 
-    void Start()
+    void Awake()
     {
         Generator = GetComponentInParent<DungeonGenerator>();
         foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())

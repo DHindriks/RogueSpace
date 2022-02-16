@@ -8,7 +8,7 @@ public class DungeonTeleporter : MonoBehaviour
     DungeonData Data;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Data = transform.root.GetComponent<DungeonData>();
         Data.GeneratedDoors.Add(gameObject);

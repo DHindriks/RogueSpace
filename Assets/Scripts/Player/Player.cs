@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Analytics;
 
 [RequireComponent(typeof(HealthScript))]
 public class Player : MonoBehaviour
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        Analytics.CustomEvent("StartGame");
         // Store reference to attached component
         controller = GetComponent<Rigidbody>();
         Health = GetComponent<HealthScript>();
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour
             Destroy(obj.gameObject);
         }
 
-        CurrentSkin = Instantiate(GameManager.instance.SkinList[ID], transform.GetChild(0));
+        CurrentSkin = Instantiate(GameManager.instance.SkinList[ID], transform.GetChild(0).GetChild(0));
         CurrentSkin.transform.localPosition = Vector3.zero;
         CurrentSkin.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
@@ -124,6 +126,10 @@ public class Player : MonoBehaviour
                 {
                     GameManager.instance.MotherShipInv.AddItem(EquippedWeapon);
                     EquippedWeapon = null;
+                    foreach (Transform obj in transform.GetChild(0).GetChild(1))
+                    {
+                        Destroy(obj.gameObject);
+                    }
                 }
                 break;
 
@@ -132,6 +138,10 @@ public class Player : MonoBehaviour
                 {
                     GameManager.instance.MotherShipInv.AddItem(EquippedEngine);
                     EquippedEngine = null;
+                    foreach (Transform obj in transform.GetChild(0).GetChild(3))
+                    {
+                        Destroy(obj.gameObject);
+                    }
                 }
                 break;
 
@@ -140,6 +150,10 @@ public class Player : MonoBehaviour
                 {
                     GameManager.instance.MotherShipInv.AddItem(EquippedShield);
                     EquippedShield = null;
+                    foreach (Transform obj in transform.GetChild(0).GetChild(2))
+                    {
+                        Destroy(obj.gameObject);
+                    }
                 }
                 break;
         }

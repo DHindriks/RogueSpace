@@ -10,7 +10,7 @@ public class DungeonDeadEndInteriorSpawner : MonoBehaviour
     DungeonGenerator Generator;
     DungeonData data;
 
-    void Start()
+    void Awake()
     {
         Generator = GetComponentInParent<DungeonGenerator>();
         foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
