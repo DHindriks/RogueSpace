@@ -25,18 +25,20 @@ public class DungeonDeadEndInteriorSpawner : MonoBehaviour
             }
         }
         data = transform.root.GetComponent<DungeonData>();
+    }
 
-        //if not enough exits, generate exit;
-        if(data.GeneratedDoors.Count < data.exits.Count && (Generator.CurrentLength / Generator.MaxLength) > (data.GeneratedDoors.Count / data.exits.Count))
+    public void SpawnInterior(GameObject custom = null)
+    {
+        if (Interiors.Count > 0 || custom != null)
         {
-            GameObject Interior = Instantiate(Generator.ExitInterior, transform);
+            if (custom == null)
+            {
+                custom = Interiors[Random.Range(0, Interiors.Count)];
+            }
+
+            GameObject Interior = Instantiate(custom, transform);
             Interior.transform.position = transform.position;
             Interior.transform.rotation = transform.rotation;
-        }
-        else if (Interiors.Count > 0)
-        {
-            GameObject Interior = Instantiate(Interiors[Random.Range(0, Interiors.Count)], transform);
-            Interior.transform.position = transform.position;
         }
     }
 }

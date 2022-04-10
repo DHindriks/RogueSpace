@@ -59,6 +59,7 @@ public class RoomSpawnPoint : MonoBehaviour
                     NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
                     NewTile.transform.LookAt(transform, Vector3.up);
                     Generator.CurrentLength++;
+                    Generator.CurrentDungeonDeadEnds.Add(NewTile);
                 }
                 else //spawn normal 
                 {
@@ -66,29 +67,36 @@ public class RoomSpawnPoint : MonoBehaviour
                     NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
                     NewTile.transform.LookAt(transform, Vector3.up);
                     Generator.CurrentLength++;
+                    Generator.CurrentDungeonTiles.Add(NewTile);
                 }
 
-            }else if (numberOfCollidersFound == 0) //no overlap and no more tiles to be spawned.
+            }
+            else if (numberOfCollidersFound == 0) //no overlap and no more tiles to be spawned.
             {
                 GameObject NewTile = Instantiate(Generator.Deadend, transform.parent);
 
                 NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
                 NewTile.transform.LookAt(transform, Vector3.up);
                 Generator.CurrentLength++;
+                Generator.CurrentDungeonDeadEnds.Add(NewTile);
             }
 
         }
-
-        SpawnInterior();
-
+        Generator.CheckRoomCount();
     }
 
-    void SpawnInterior()
+    public void SpawnInterior(GameObject custom = null)
     {
-        if (Interiors.Count > 0)
+        if (Interiors.Count > 0 || custom != null)
         {
-            GameObject Interior = Instantiate(Interiors[Random.Range(0, Interiors.Count)], transform);
+            if (custom == null)
+            {
+                custom = Interiors[Random.Range(0, Interiors.Count)];
+            }
+
+            GameObject Interior = Instantiate(custom, transform);
             Interior.transform.position = transform.position;
+            Interior.transform.rotation = transform.rotation;
         }
     }
 

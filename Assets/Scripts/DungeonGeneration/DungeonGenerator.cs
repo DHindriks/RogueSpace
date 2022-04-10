@@ -24,7 +24,8 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     List<Color> DungeonColors;
 
-    
+    public List<GameObject> CurrentDungeonTiles;
+    public List<GameObject> CurrentDungeonDeadEnds;
 
     [HideInInspector]
     public int PickedLength;
@@ -69,7 +70,78 @@ public class DungeonGenerator : MonoBehaviour
         Data.Init();
 
         GameObject FirstTile = Instantiate(StartTiles[seed.Next(0, StartTiles.Count)], transform);
+        CurrentDungeonTiles.Add(FirstTile);
         FirstTile.name += "(Origin)";
+    }
+
+    //rooms that spawn at or above the maxrooms count will call this 
+    public void CheckRoomCount()
+    {
+        CancelInvoke("PopulateDungeon");
+        Invoke("PopulateDungeon", 1);
+    }
+
+
+    void PopulateDungeon()
+    {
+        int ExitsNeeded = Data.exits.Count;
+        int CurrentExits = 0;
+
+        //generates all possible exits in dead end rooms
+        for(int i = 0; i <= ExitsNeeded - CurrentExits; i++)
+        {
+            if (CurrentExits >= ExitsNeeded || CurrentDungeonDeadEnds.Count == 0)
+            {
+                break;
+            }
+            int SelectedDeadEnd = Random.Range(0, CurrentDungeonDeadEnds.Count);
+            CurrentDungeonDeadEnds[SelectedDeadEnd].GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior(ExitInterior);
+            CurrentDungeonDeadEnds.RemoveAt(SelectedDeadEnd);
+
+            CurrentExits++;
+        }
+
+        //generates remaining exits in normal rooms
+        if (CurrentExits < ExitsNeeded)
+        {
+            for (int i = 0; i <= ExitsNeeded - CurrentExits; i++)
+            {
+                if (CurrentExits >= ExitsNeeded || CurrentDungeonTiles.Count == 0)
+                {
+                    break;
+                }
+                int SelectedRoom = Random.Range(0, CurrentDungeonTiles.Count);
+                CurrentDungeonTiles[SelectedRoom].GetComponent<RoomSpawnPoint>().SpawnInterior(ExitInterior);
+                CurrentDungeonTiles.RemoveAt(SelectedRoom);
+
+                CurrentExits++;
+            }
+        }
+
+        foreach (GameObject room in CurrentDungeonDeadEnds)
+        {
+            if (room.GetComponent<DungeonDeadEndInteriorSpawner>())
+            {
+                room.GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior();
+            }
+            else
+            {
+                Debug.LogWarning("Spawned DeadEnd " + room.name + " does not contain DungeonDeadEndInteriorSpawner class, is this intentional?");
+            }
+        }
+
+        foreach (GameObject room in CurrentDungeonTiles)
+        {
+            if(room.GetComponent<RoomSpawnPoint>())
+            {
+                room.GetComponent<RoomSpawnPoint>().SpawnInterior();
+            }
+            else
+            {
+                Debug.LogWarning("Spawned room " + room.name + " does not contain RoomSpawnPoint class, is this intentional?");
+            }
+        }
+
     }
 
 }

@@ -1203,6 +1203,7 @@ MonoBehaviour:
   - {fileID: 7019357684954494822}
   - {fileID: 5391964889518922589}
   - {fileID: 2120870843714887075}
+  Dungeon: {fileID: 4380014113533799402}
   WallMat: {fileID: 0}
   FloorMat: {fileID: 0}
 --- !u!1 &9157528327370300614
@@ -1363,6 +1364,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fde4f16dc3a0dd4a8219d9f1e968fda, type: 3}
+--- !u!1 &4380014113533799402 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6576082386873622914, guid: 2fde4f16dc3a0dd4a8219d9f1e968fda,
+    type: 3}
+  m_PrefabInstance: {fileID: 7460810606202784360}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4380014113533799189 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6576082386873622909, guid: 2fde4f16dc3a0dd4a8219d9f1e968fda,
