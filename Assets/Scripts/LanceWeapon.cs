@@ -14,7 +14,7 @@ public class LanceWeapon : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<HealthScript>())
+        if(other.GetComponent<HealthScript>() && !other.isTrigger)
         {
             other.GetComponent<HealthScript>().DoDamage(10);
             Vector3 dir = other.transform.position - transform.position;
