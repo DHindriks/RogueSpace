@@ -74,6 +74,7 @@ public class OpenInventory : MonoBehaviour
     public void CloseInventory()
     {
         InventoryActive = false;
+        player.transform.position = new Vector3(player.transform.position.x, 0, player.transform.position.z);
         cam.ChangeCam();
     }
 

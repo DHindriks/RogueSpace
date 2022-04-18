@@ -21,7 +21,6 @@ public class SwitchControls : MonoBehaviour
         if (dropshipControls.CtrlEnabled)
         {
             dropshipControls.GetComponent<Rigidbody>().drag = 1;
-            dropshipControls.OpenDoor(false);
             player.transform.SetParent(pos.transform);
             player.GetComponent<Rigidbody>().isKinematic = true;
             player.transform.position = pos.position;
@@ -32,9 +31,9 @@ public class SwitchControls : MonoBehaviour
         else
         {
             dropshipControls.GetComponent<Rigidbody>().drag = 100;
-            dropshipControls.OpenDoor(true);
             player.transform.SetParent(null);
             player.transform.rotation = Quaternion.Euler(0, 0, 0);
+            player.transform.position = new Vector3(player.transform.position.x, 0, player.transform.position.z);
             player.GetComponent<Rigidbody>().isKinematic = false;
             GameManager.instance.camerascript.ChangeZoom(90);
             player.gameObject.tag = "Player";
