@@ -10,7 +10,7 @@ public class InventoryGen : MonoBehaviour
 
 
     [SerializeField]
-    OpenItemMenu Inventory;
+    Inventory inventory;
 
     [SerializeField]
     ItemTypes type;
@@ -32,19 +32,19 @@ public class InventoryGen : MonoBehaviour
         btnScriptUnequip.onClick.AddListener(delegate { GameManager.instance.player.UnEquip(type); });
 
         //foreach (ItemBase item in Inventory.Inventory)
-        for (int i = 0; i < Inventory.Inventory.Count; i++)
+        for (int i = 0; i < inventory.inventory.Count; i++)
         {
-           if(Inventory.Inventory[i].Type == type)
+           if(inventory.inventory[i].Type == type)
             {
                 GameObject Btn = Instantiate(BtnBase, transform);
                 Button btnScript = Btn.GetComponent<Button>();
 
                 Btn.name = i.ToString();
 
-                ItemBase item = Inventory.Inventory[i];
+                ItemBase item = inventory.inventory[i];
                 int thisID = i;
 
-                switch (Inventory.Inventory[i].Type)
+                switch (inventory.inventory[i].Type)
                 {
                     case ItemTypes.Weapon:
                         btnScript.onClick.AddListener(delegate { GameManager.instance.player.EquipWeapon(item); });
@@ -74,12 +74,12 @@ public class InventoryGen : MonoBehaviour
     void RemoveItem(int ID, int Amount = 1)
     {
         Debug.Log("removed " + ID);
-        Inventory.Inventory[ID].amount -= Amount;
+        inventory.inventory[ID].amount -= Amount;
 
-        if(Inventory.Inventory[ID].amount <= 0)
+        if(inventory.inventory[ID].amount <= 0)
         {
             Debug.Log(ID + "aa");
-            Inventory.Inventory.RemoveAt(ID);
+            inventory.inventory.RemoveAt(ID);
         }
         GenerateInv();
     }

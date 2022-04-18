@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Inventory))]
 public class OpenItemMenu : MonoBehaviour
 {
-    public List<ItemBase> Inventory;
 
     [SerializeField]
     InventoryGen Generator;
@@ -12,11 +12,15 @@ public class OpenItemMenu : MonoBehaviour
     [SerializeField]
     GameObject InventoryCanvas;
 
+    Inventory inventory;
+
     Player player;
 
     void Start()
     {
         GameManager.instance.MotherShipInv = this;
+        inventory = GetComponent<Inventory>();
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -40,19 +44,19 @@ public class OpenItemMenu : MonoBehaviour
 
     void TransferItems()
     {
-        foreach(ItemBase item in player.Inventory)
+        foreach(ItemBase item in player.GetComponent<Inventory>().inventory)
         {
             AddItem(item);
         }
 
-        player.Inventory.Clear();
+        player.GetComponent<Inventory>().inventory.Clear();
     }
 
     public void AddItem(ItemBase item)
     {
         if (item.Type == ItemTypes.Resource)
         {
-            foreach (ItemBase resource in Inventory)
+            foreach (ItemBase resource in inventory.inventory)
             {
                 if (resource.Name == item.Name)
                 {
@@ -60,12 +64,12 @@ public class OpenItemMenu : MonoBehaviour
                     return;
                 }
             }
-            Inventory.Add(item);
+            inventory.inventory.Add(item);
 
         }
         else
         {
-            Inventory.Add(item);
+            inventory.inventory.Add(item);
         }
         Generator.GenerateInv();
     }

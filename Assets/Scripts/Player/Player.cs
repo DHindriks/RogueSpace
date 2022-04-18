@@ -23,8 +23,6 @@ public class Player : MonoBehaviour
     ItemBase EquippedEngine;
     ItemBase EquippedShield;
 
-    public List<ItemBase> Inventory = new List<ItemBase>();
-
     private Vector3 moveDirection = Vector3.zero;
     private Rigidbody controller;
 
@@ -53,26 +51,6 @@ public class Player : MonoBehaviour
         CurrentSkin.transform.localPosition = Vector3.zero;
         CurrentSkin.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
-    }
-
-    public void AddItem(ItemBase item)
-    {
-        if (item.Type == ItemTypes.Resource)
-        {
-            foreach (ItemBase resource in Inventory)
-            {
-                if (resource.Name == item.Name)
-                {
-                    resource.amount += item.amount;
-                    return;
-                }
-            }
-            Inventory.Add(item);
-
-        } else
-        {
-            Inventory.Add(item);
-        }
     }
 
     public void EquipWeapon(ItemBase weapon)

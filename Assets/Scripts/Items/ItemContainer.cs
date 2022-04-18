@@ -15,10 +15,14 @@ public class ItemContainer : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-
-        if (other.transform.root.tag == "Player" && !other.isTrigger)
+        if (other.transform.root.GetComponent<Inventory>())
         {
-            other.transform.root.GetComponent<Player>().AddItem(ContainedItem);
+            other.transform.root.GetComponent<Inventory>().AddItem(ContainedItem);
+            Destroy(this);
+            GameManager.instance.ShrinkDespawn(gameObject);
+        }else if (other.GetComponent<Inventory>())
+        {
+            other.GetComponent<Inventory>().AddItem(ContainedItem);
             Destroy(this);
             GameManager.instance.ShrinkDespawn(gameObject);
         }
