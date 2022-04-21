@@ -10027,7 +10027,6 @@ MonoBehaviour:
   speed: 60
   DBGControls: 0
   Joystick: {fileID: 1273607101}
-  Inventory: []
 --- !u!114 &1637511200
 MonoBehaviour:
   m_ObjectHideFlags: 0

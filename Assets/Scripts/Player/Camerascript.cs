@@ -15,6 +15,7 @@ public class Camerascript : MonoBehaviour
 
     Quaternion TargetRotation;
     Coroutine LastRoutine;
+    Coroutine LastTiltRoutine;
 
     Camera MainCamera;
 
@@ -106,6 +107,15 @@ public class Camerascript : MonoBehaviour
         LastRoutine = StartCoroutine(LerpZoom(Zoom, LerpTime));
     }
 
+    public void ChangeTilt(float LerpTime = 1, Vector3 Rotation = default)
+    {
+        if (LastTiltRoutine != null)
+        {
+            StopCoroutine(LastTiltRoutine);
+        }
+        LastTiltRoutine = StartCoroutine(LerpTilt(Rotation, LerpTime));
+    }
+
     public void ChangeCam(Camera Newcam = null)
     {
         StopCoroutine(CamFadeTransition());
@@ -155,6 +165,25 @@ public class Camerascript : MonoBehaviour
         }
 
         MainCamera.fieldOfView = FOV;
+    }
+
+    IEnumerator LerpTilt(Vector3 RotateTo, float LerpTime)
+    {
+        float Rate = 1.0f / LerpTime;
+        float i = 0;
+
+        Quaternion pos = MainCamera.transform.root.rotation;
+
+        while (i < 1)
+        {
+            i += Time.deltaTime * Rate;
+            pos = Quaternion.Lerp(pos, Quaternion.Euler(RotateTo.x, RotateTo.y, RotateTo.z), i);
+
+            MainCamera.gameObject.transform.root.rotation = pos;
+            yield return 0;
+        }
+
+        MainCamera.gameObject.transform.root.rotation = Quaternion.Euler(RotateTo.x, RotateTo.y, RotateTo.z);
     }
 
     IEnumerator LerpZoom(float Zoom, float LerpTime)

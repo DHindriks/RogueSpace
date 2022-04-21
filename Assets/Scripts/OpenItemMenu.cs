@@ -29,6 +29,7 @@ public class OpenItemMenu : MonoBehaviour
         {
             InventoryCanvas.SetActive(true);
             player = other.transform.root.GetComponent<Player>();
+            GameManager.instance.camerascript.ChangeTilt(1.5f, new Vector3(-20, 0, 0));
             TransferItems();
         }
 
@@ -39,6 +40,7 @@ public class OpenItemMenu : MonoBehaviour
         if (other.transform.root.tag == "Player")
         {
             InventoryCanvas.SetActive(false);
+            GameManager.instance.camerascript.ChangeTilt(1.5f);
         }
     }
 
